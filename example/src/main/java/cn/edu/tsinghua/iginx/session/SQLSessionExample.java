@@ -11,7 +11,7 @@ public class SQLSessionExample {
 
     private static Session session;
 
-    private static final String prefix = "us.d1";
+    private static final String prefix = "wy";
 
     private static final String S1 = "s1";
     private static final String S2 = "s2";

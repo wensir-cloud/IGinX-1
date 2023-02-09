@@ -20,6 +20,7 @@ package cn.edu.tsinghua.iginx.engine.shared.data.write;
 
 import cn.edu.tsinghua.iginx.thrift.DataType;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
