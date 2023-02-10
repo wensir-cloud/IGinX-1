@@ -141,6 +141,9 @@ public class Session {
         return true;
     }
 
+    public String getIp(){return this.host;}
+    public int getPort(){return this.port;}
+    public String getUsername(){return this.username;}
     private OpenSessionResp tryOpenSession() throws SessionException, TException {
         transport = new TSocket(host, port);
         if (!transport.isOpen()) {
@@ -207,6 +210,7 @@ public class Session {
             redirectTimes = 0;
 
         } catch (TException e) {
+            e.printStackTrace();
             transport.close();
             throw new SessionException(e);
         }

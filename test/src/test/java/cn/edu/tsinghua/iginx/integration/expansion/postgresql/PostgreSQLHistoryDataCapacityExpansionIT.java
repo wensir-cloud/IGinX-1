@@ -1,4 +1,4 @@
-package cn.edu.tsinghua.iginx.integration.expansion.postgresql
+package cn.edu.tsinghua.iginx.integration.expansion.postgresql;
 
 import cn.edu.tsinghua.iginx.exceptions.SessionException;
 import cn.edu.tsinghua.iginx.integration.SQLSessionIT;
@@ -10,6 +10,18 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.*;
+import java.util.Map.Entry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class PostgreSQLHistoryDataCapacityExpansionIT implements BaseCapacityExpansionIT {
 
@@ -18,32 +30,55 @@ public class PostgreSQLHistoryDataCapacityExpansionIT implements BaseCapacityExp
     private static Connection connection;
 
     private String ENGINE_TYPE;
-
     public PostgreSQLHistoryDataCapacityExpansionIT(String engineType) {
         this.ENGINE_TYPE = engineType;
     }
 
     @BeforeClass
     public static void setUp() {
-//        session = new Session("127.0.0.1", 6888, "root", "root");
-        String connUrl = String
-                .format("jdbc:postgresql://%s:%s/?user=postgres&password=postgres", meta.getIp(), meta.getPort());
-//        Connection connection = DriverManager.getConnection(connUrl);
-//        Statement stmt = connection.createStatement();
-        try {
-//            session.openSession();
-            Connection connection = DriverManager.getConnection(connUrl);
-        } catch (SessionException e) {
-            logger.error(e.getMessage());
+
+        try
+        {
+            Class.forName("org.postgresql.Driver");
+            String url = "jdbc:postgresql://127.0.0.1:5432/postgres";
+            try
+            {
+                Connection connnection= DriverManager.getConnection(url, "postgres", "postgres");
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
         }
     }
 
-    private static void test_compare(Connection connection,String statement,String expect){
-        String connUrl = String
-                .format("jdbc:postgresql://%s:%s/?user=postgres&password=postgres", meta.getIp(), meta.getPort());
-        connection = DriverManager.getConnection(connUrl);
+    private static void test_compare(Connection connection,String statement,String expect) throws SQLException {
+//        String connUrl = String
+//                .format("jdbc:postgresql://%s:%s/?user=postgres&password=postgres", meta.getIp(), meta.getPort());
+        try
+        {
+            Class.forName("org.postgresql.Driver");
+            String url = "jdbc:postgresql://127.0.0.1:5432/postgres";
+            try
+            {
+                Connection connnection= DriverManager.getConnection(url, "postgres", "postgres");
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        //connection = DriverManager.getConnection(connUrl);
         Statement stmt = connection.createStatement();
-        ResultSet rs=stmt.execute(expect);
+        ResultSet rs=stmt.executeQuery(expect);
         boolean act_true=true;
         while(rs.next()) {
             act_true=false;
@@ -56,10 +91,10 @@ public class PostgreSQLHistoryDataCapacityExpansionIT implements BaseCapacityExp
             }
         }
         if(act_true){
-            logger.info("testQueryHistoryDataFromInitialNode is ok!")
+            logger.info("testQueryHistoryDataFromInitialNode is ok!");
         }
         else{
-            logger.info("testQueryHistoryDataFromInitialNode have some problems!")
+            logger.info("testQueryHistoryDataFromInitialNode have some problems!");
         }
     }
 
@@ -67,7 +102,7 @@ public class PostgreSQLHistoryDataCapacityExpansionIT implements BaseCapacityExp
     public static void tearDown() {
         try {
             connection.close();
-        } catch (SessionException e) {
+        } catch (SQLException e) {
             logger.error(e.getMessage());
         }
     }

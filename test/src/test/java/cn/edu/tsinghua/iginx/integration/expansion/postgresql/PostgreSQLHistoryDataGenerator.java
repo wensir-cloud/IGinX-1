@@ -1,10 +1,15 @@
 package cn.edu.tsinghua.iginx.integration.expansion.postgresql;
 
 import cn.edu.tsinghua.iginx.integration.expansion.BaseHistoryDataGenerator;
+import cn.edu.tsinghua.iginx.integration.expansion.iotdb.IoTDBHistoryDataGenerator;
 import org.apache.iotdb.session.Session;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class PostgreSQLHistoryDataGenerator implements BaseHistoryDataGenerator {
 
@@ -37,8 +42,23 @@ public class PostgreSQLHistoryDataGenerator implements BaseHistoryDataGenerator 
 //            sessionA.open();
 //            sessionA.executeNonQueryStatement("DELETE STORAGE GROUP root.*");
 //            sessionA.close();
-            String connUrl = String
-                    .format("jdbc:postgresql://%s:%s/?user=postgres&password=postgres", meta.getIp(), meta.getPort());
+            try
+            {
+                Class.forName("org.postgresql.Driver");
+                String url = "jdbc:postgresql://127.0.0.1:5432/postgres";
+                try
+                {
+                    Connection connnection= DriverManager.getConnection(url, "postgres", "postgres");
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            catch (ClassNotFoundException e)
+            {
+                e.printStackTrace();
+            }
             Connection connection = DriverManager.getConnection(connUrl);
             Statement stmt = connection.createStatement();
             ResultSet rs=stmt.executeQuery("SELECT datname FROM pg_database");

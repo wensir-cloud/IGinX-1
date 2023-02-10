@@ -30,7 +30,7 @@
     <!--module>dataSources/timescaledb</module-->
     <module>dataSources/postgresql</module>
     <module>dataSources/parquet</module>
-<!--    <module>DWF</module>-->
+    <module>DWF</module>
     <module>example</module>
     <module>test</module>
     <module>zeppelin-interpreter</module>
